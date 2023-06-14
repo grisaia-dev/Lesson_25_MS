@@ -2,18 +2,16 @@
 #include "lib/big_integer.hpp"
 
 int main(void) {
-    auto number1 = big_integer(114575);
-    auto number2 = big_integer(78524);
+    auto number1 = big_integer("64591348763126459153756459152435628");
+    auto number2 = big_integer(5643269487); // Можно использовать и числа типа int
+    auto number3 = number1 + number2;
+    auto number4 = number1 - number2;
+    auto number5 = number1 * number2;
+    auto number6 = number1 / number2;
 
-    auto result = number1 + number2;
-    auto result2 = number1 * number2;
-    auto result3 = number2 * 2;
-
-    std::cout << *result << std::endl;
-    result = result * 2;
-
-    std::cout << *result << std::endl;
-    std::cout << *result2 << std::endl;
-    std::cout << *result3 << std::endl;
+    std::cout << "[Sum]: " << number3 << std::endl;
+    std::cout << "[Diff]: " << number4 << std::endl;
+    std::cout << "[Mult]: " << number5 << std::endl;
+    std::cout << "[Sub]: " << number6 << std::endl;
     return 0;
 }

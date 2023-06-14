@@ -1,24 +1,42 @@
 #pragma once
-#include <iostream>
+//#include <iostream>
+#include <ostream>
+#include <vector>
 
 class big_integer {
-private:
-    long int* value;
 public:
-    big_integer(long int number) : value(new long int(number)) {}
-    big_integer(big_integer&& other) noexcept : value(std::move(other.value)) {} // Конструктор перемещения
-
+    big_integer() : number(0) {}
+    big_integer(std::string value) {
+        for (auto& digit : value)
+            number.push_back(digit - '0');
+        std::reverse(number.begin(), number.end());
+    }
+    big_integer(std::vector<int> value) : number(value) {}
+    big_integer(big_integer&& other) noexcept : number(std::move(other.number)) {} // Конструктор перемещения
+    big_integer(long long value) { // Если захотим передавать значение типа int
+        while(value) {
+            this->number.push_back(value % base);
+            value /= base;
+        }
+    }
     big_integer& operator=(big_integer&& other) noexcept { // Перемещающий оператор присваивания
-        std::swap(value, other.value);
+        std::swap(this->number, other.number);
         return *this;
     }
 
-    big_integer operator+(const big_integer& other) { return *value + *other.value; } // оператор сложения двух больших чисел
-    big_integer operator+(long int other) { return *value + other; }
-    big_integer operator*(long int other) { return *value * other; } // оператор умножения на число
-    big_integer operator*(const big_integer& other) { return *value * *other.value; }
+    friend std::ostream& operator<<(std::ostream& out, const big_integer& value) {
+        for (int i=value.number.size()-1; i >= 0; i--)
+            out << value.number[i];
+        return out;
+    }
 
-    long int& operator*() { return *value; }
+    friend big_integer operator+(const big_integer& left, const big_integer& right); // сложение
+    friend big_integer operator-(const big_integer& left, const big_integer& right); // вычитание
+    friend big_integer operator*(const big_integer& left, const big_integer& right); // умножение
+    friend big_integer operator/(const big_integer& left, const big_integer& right); // деление
 
-    ~big_integer() { delete this->value; }
-    };
+    friend bool operator<=(const big_integer& left, const big_integer& right);
+private:
+    int base = 10;
+    std::vector<int> number;
+};
